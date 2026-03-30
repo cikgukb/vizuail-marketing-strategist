@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Visual Strategy | Versi Tanpa API</title>
+    <title>AI Visual Strategy | Studio-Grade Simulator</title>
     
     <!-- Premium Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,11 +17,32 @@
 </head>
 <body>
     
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal hidden">
+        <div class="modal-content glass">
+            <div class="modal-header">
+                <h3>Tetapan Enjin AI</h3>
+                <button id="close-settings" class="icon-btn"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="modal-body">
+                <p class="description">Masukkan API Key Gemini anda untuk mengaktifkan "Vision Analysis" bagi memastikan identiti produk dikunci dengan tepat dalam prompt.</p>
+                <div class="input-group">
+                    <label for="gemini-key">Gemini API Key</label>
+                    <input type="password" id="gemini-key" placeholder="AIzaSy...">
+                    <small>Dapatkan kekunci percuma di Google AI Studio.</small>
+                </div>
+                <button id="save-settings" class="btn primary-btn mt-4">Simpan Kekunci</button>
+            </div>
+        </div>
+    </div>
+
     <header class="navbar frosted">
         <div class="logo">
             <div class="cube"><i class="ri-box-3-fill"></i></div>
             <span>Vizu<span class="highlight">AI</span>l</span>
-            <span style="font-size: 0.8rem; background:rgba(255,255,255,0.1); padding:2px 8px; border-radius:10px; margin-left: 10px;">Offline Mode</span>
+        </div>
+        <div class="nav-actions">
+            <button id="open-settings" class="btn outline-btn"><i class="ri-settings-4-line"></i> Tetapan API</button>
         </div>
     </header>
 
@@ -29,33 +50,26 @@
         <!-- Hero Section -->
         <section class="hero text-center pt-5 pb-4">
             <h1 class="main-title mb-2">Pakar Strategi Pemasaran <span class="highlight-text">Visual AI</span></h1>
-            <p class="subtitle mb-4">Menjana Rantaian Prompt Profesional dan Pembuat Poster (Versi Input Manual / Tiada Kos API).</p>
+            <p class="subtitle mb-4">Tukar gambar produk biasa menjadi visual gred studio komersial beserta tawaran automatik.</p>
         </section>
 
         <div class="grid-layout">
             <!-- Left Panel: Inputs -->
             <div class="panel glass left-panel">
                 
-                <!-- STEP 1: Product Input (Manual) -->
+                <!-- STEP 1: Upload Product -->
                 <div class="step-card">
                     <div class="step-header">
                         <span class="step-num">1</span>
-                        <h2>Identiti Produk</h2>
+                        <h2>Gambar Produk Asal</h2>
                     </div>
-                    
-                    <div class="input-group mb-3">
-                        <label for="product-desc">Penerangan Produk (Sifat Fizikal)</label>
-                        <input type="text" id="product-desc" placeholder="Cth: Botol kaca kuning berpenutup perak, produk kosmetik mewah...">
-                        <small class="text-muted">Gantikan tugas fungsi 'AI Vision' dengan menaip ciri produk anda di sini.</small>
-                    </div>
-
-                    <p><strong><small class="text-muted">Rujukan Poster (Pilihan)</small></strong></p>
-                    <div class="upload-area mt-1" id="upload-area">
+                    <div class="upload-area" id="upload-area">
                         <input type="file" id="product-input" accept="image/*" class="hidden-input">
                         
                         <div class="upload-content" id="upload-prompt">
                             <i class="ri-upload-cloud-2-line large-icon"></i>
-                            <p>Muat Naik Rujukan</p>
+                            <p>Tarik & Lepas gambar atau <strong>Klik untuk semak imbas</strong></p>
+                            <small class="text-muted">Pastikan gambar jelas untuk 'Visual Lock' AI.</small>
                         </div>
                         
                         <div class="image-preview" id="preview-container" style="display: none;">
@@ -124,13 +138,18 @@
                 <div class="result-placeholder" id="empty-state">
                     <div class="glow-orb"></div>
                     <i class="ri-sparkling-fill huge-icon"></i>
-                    <h3>Ruang Strategi Offline</h3>
+                    <h3>Ruang Strategi AI</h3>
                     <p>Lengkapkan langkah di sebelah kiri untuk menjana formula prompt dan studio poster anda.</p>
                 </div>
 
                 <!-- Results State -->
                 <div id="result-state" class="hidden">
                     
+                    <div class="status-card analyzer-status mb-4 hidden" id="ai-loading">
+                        <div class="spinner"></div>
+                        <span>Menganalisis profil produk dengan Gemini Vision...</span>
+                    </div>
+
                     <div class="result-card" id="prompt-result">
                         <div class="card-header flex-between">
                             <h3 style="font-family: 'Outfit', sans-serif;"><i class="ri-terminal-window-fill highlight-text"></i> Prompt Pemasaran Pintar (5T)</h3>
@@ -138,7 +157,7 @@
                         </div>
                         <div class="card-body">
                             <textarea id="output-prompt" class="code-textarea" rows="18" readonly></textarea>
-                            <p class="helper-text mt-2"><i class="ri-information-line"></i> Salin dan tampal di Midjourney, DALL-E 3 atau Adobe Firefly. Ruangan ciri telah dimasukkan berdasarkan input rekaan mekanikal anda.</p>
+                            <p class="helper-text mt-2"><i class="ri-information-line"></i> Salin dan tampal di Midjourney, DALL-E 3 atau Adobe Firefly. Sistem telah mengunci rupa produk asal anda.</p>
                         </div>
                     </div>
 
@@ -221,6 +240,6 @@
         </div>
     </footer>
 
-    <script src="app-no-api.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
