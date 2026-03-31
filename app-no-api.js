@@ -139,6 +139,17 @@ const canvasWrapper = document.getElementById('canvas-wrapper');
 const posterCanvas = document.getElementById('poster-canvas');
 const downloadBtn = document.getElementById('download-btn');
 
+// --- Feedback Modal DOM Elements ---
+const feedbackModal = document.getElementById('feedback-modal');
+const openFeedbackBtn = document.getElementById('open-feedback-btn');
+const closeFeedbackBtn = document.getElementById('close-feedback-btn');
+const feedbackForm = document.getElementById('feedback-form');
+const feedbackStatus = document.getElementById('feedback-status');
+const submitFeedbackBtn = document.getElementById('submit-feedback-btn');
+
+// --- Google Apps Script Webhook URL ---
+// TENTATIF: Masukkan URL Web App daripada Google Apps Script selepas Deploy
+const FEEDBACK_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxAowp4E4I5bHdvwrkjxWulgxWhC7VxsCsFe4XfsE3nXZtL0g2xbLiT7CaIs-mM9fjC/exec';
 
 // --- Initialization ---
 function init() {
@@ -239,6 +250,24 @@ function attachEventListeners() {
         link.href = posterCanvas.toDataURL('image/png');
         link.click();
     });
+
+    // Feedback Modal
+    if (openFeedbackBtn) {
+        openFeedbackBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            feedbackModal.classList.remove('hidden');
+        });
+    }
+    
+    if (closeFeedbackBtn) {
+        closeFeedbackBtn.addEventListener('click', () => {
+            feedbackModal.classList.add('hidden');
+        });
+    }
+    
+    if (feedbackForm) {
+        feedbackForm.addEventListener('submit', handleFeedbackSubmit);
+    }
 }
 
 function handleBrandImage(file) {
@@ -321,6 +350,62 @@ function generateStrategy() {
 
     outputPrompt.value = lines.join('\n');
     promptResult.classList.remove('hidden');
+}
+
+async function handleFeedbackSubmit(e) {
+    e.preventDefault();
+    if (!FEEDBACK_WEBHOOK_URL) {
+        alert("Sila kemas kini FEEDBACK_WEBHOOK_URL di dalam fail javascript terlebih dahulu.");
+        return;
+    }
+    
+    // UI Update
+    submitFeedbackBtn.disabled = true;
+    submitFeedbackBtn.innerHTML = '<div class="spinner border-sm mr-2" style="display:inline-block; border-color:white; border-top-color:transparent; width:15px; height:15px"></div> Menghantar...';
+    feedbackStatus.classList.add('hidden');
+    
+    const formData = {
+        name: document.getElementById('feedback-name').value.trim(),
+        contact: document.getElementById('feedback-contact').value.trim(),
+        category: document.getElementById('feedback-category').value,
+        message: document.getElementById('feedback-message').value.trim()
+    };
+    
+    try {
+        const response = await fetch(FEEDBACK_WEBHOOK_URL, {
+            method: 'POST',
+            body: JSON.stringify(formData),
+            headers: {
+                'Content-Type': 'text/plain;charset=utf-8' // Simple Request to bypass CORS preflight
+            }
+        });
+        
+        const result = await response.json();
+        if (result.status === 'success') {
+            feedbackStatus.textContent = "Aduan anda berjaya dihantar. Terima kasih!";
+            feedbackStatus.style.background = "rgba(16, 185, 129, 0.2)";
+            feedbackStatus.style.color = "var(--success)";
+            feedbackForm.reset();
+        } else {
+            throw new Error(result.message || 'Ralat pelayan.');
+        }
+    } catch (error) {
+        feedbackStatus.textContent = "Gagal menghantar aduan: " + error.message;
+        feedbackStatus.style.background = "rgba(239, 68, 68, 0.2)";
+        feedbackStatus.style.color = "var(--danger)";
+    } finally {
+        submitFeedbackBtn.disabled = false;
+        submitFeedbackBtn.innerHTML = '<i class="ri-send-plane-fill"></i> Hantar Maklum Balas';
+        feedbackStatus.classList.remove('hidden');
+        
+        // Auto hide modal after 3s on success
+        if (feedbackStatus.style.color === "var(--success)") {
+            setTimeout(() => {
+                feedbackModal.classList.add('hidden');
+                feedbackStatus.classList.add('hidden');
+            }, 3000);
+        }
+    }
 }
 
 // --- Canvas Composer ---
