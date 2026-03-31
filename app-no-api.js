@@ -147,9 +147,8 @@ const feedbackForm = document.getElementById('feedback-form');
 const feedbackStatus = document.getElementById('feedback-status');
 const submitFeedbackBtn = document.getElementById('submit-feedback-btn');
 
-// --- Google Apps Script Webhook URL ---
-// TENTATIF: Masukkan URL Web App daripada Google Apps Script selepas Deploy
-const FEEDBACK_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxAowp4E4I5bHdvwrkjxWulgxWhC7VxsCsFe4XfsE3nXZtL0g2xbLiT7CaIs-mM9fjC/exec';
+
+
 
 // --- Initialization ---
 function init() {
@@ -493,3 +492,95 @@ if (!CanvasRenderingContext2D.prototype.roundRect) {
 }
 
 init();
+
+// --- Feedback Modal ---
+const FEEDBACK_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxAowp4E4I5bHdvwrkjxWulgxWhC7VxsCsFe4XfsE3nXZtL0g2xbLiT7CaIs-mM9fjC/exec';
+
+function initFeedbackModal() {
+    const openBtn = document.getElementById('open-feedback-btn');
+    const modal = document.getElementById('feedback-modal');
+    const closeBtn = document.getElementById('close-feedback-btn');
+    const form = document.getElementById('feedback-form');
+    const statusDiv = document.getElementById('feedback-status');
+    const submitBtn = document.getElementById('submit-feedback-btn');
+
+    if (!openBtn || !modal) return;
+
+    openBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        modal.classList.remove('hidden');
+    });
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+            modal.classList.add('hidden');
+        });
+    }
+
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.classList.add('hidden');
+        }
+    });
+
+    if (form) {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const name = (document.getElementById('feedback-name') || {}).value || 'Tanpa Nama';
+            const contact = (document.getElementById('feedback-contact') || {}).value || '-';
+            const category = (document.getElementById('feedback-category') || {}).value || 'Lain-lain';
+            const message = (document.getElementById('feedback-message') || {}).value || '';
+
+            if (!message.trim()) {
+                showFeedbackStatus('Sila masukkan mesej anda.', 'error');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="ri-loader-4-line"></i> Menghantar...';
+
+            const payload = JSON.stringify({ name, contact, category, message });
+
+            try {
+                const response = await fetch(FEEDBACK_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: payload
+                });
+                const result = await response.text();
+                if (result.includes('success') || response.ok) {
+                    showFeedbackStatus('✅ Terima kasih! Maklum balas anda telah dihantar.', 'success');
+                    form.reset();
+                    setTimeout(() => { modal.classList.add('hidden'); statusDiv.classList.add('hidden'); }, 3000);
+                } else {
+                    showFeedbackStatus('❌ Ralat: Maklum balas gagal dihantar. Cuba lagi.', 'error');
+                }
+            } catch (err) {
+                showFeedbackStatus('❌ Gagal berhubung. Sila periksa sambungan internet anda.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="ri-send-plane-fill"></i> Hantar Maklum Balas';
+            }
+        });
+    }
+
+    function showFeedbackStatus(msg, type) {
+        statusDiv.textContent = msg;
+        statusDiv.className = 'mt-3 text-center';
+        statusDiv.style.padding = '10px';
+        statusDiv.style.borderRadius = '8px';
+        statusDiv.style.fontSize = '0.9rem';
+        if (type === 'success') {
+            statusDiv.style.background = 'rgba(16,185,129,0.15)';
+            statusDiv.style.color = '#10b981';
+            statusDiv.style.border = '1px solid rgba(16,185,129,0.3)';
+        } else {
+            statusDiv.style.background = 'rgba(239,68,68,0.15)';
+            statusDiv.style.color = '#ef4444';
+            statusDiv.style.border = '1px solid rgba(239,68,68,0.3)';
+        }
+    }
+}
+
+initFeedbackModal();
+
