@@ -209,11 +209,50 @@
             <p class="footer-subtext mt-4">Ada aduan atau cadangan penambahbaikan sistem?</p>
             <p class="footer-subtext">Isikan borang di bawah untuk membantu kami menjadi lebih baik:</p>
             
-            <a href="#" target="_blank" class="btn primary-btn mt-3" style="display: inline-flex; max-width: 300px; margin: 16px auto; align-items: center; justify-content: center; background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: 1px solid rgba(16, 185, 129, 0.3);">
+            <a href="#" id="open-feedback-btn" class="btn primary-btn mt-3" style="display: inline-flex; max-width: 300px; margin: 16px auto; align-items: center; justify-content: center; background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: 1px solid rgba(16, 185, 129, 0.3);">
                 <i class="ri-feedback-line" style="margin-right: 8px;"></i> Borang Aduan & Cadangan
             </a>
         </div>
     </footer>
+
+    <!-- Feedback Modal -->
+    <div id="feedback-modal" class="modal-overlay hidden">
+        <div class="modal-content glass">
+            <button id="close-feedback-btn" class="icon-btn close-modal-btn"><i class="ri-close-line"></i></button>
+            <div class="modal-header text-center">
+                <i class="ri-mail-send-fill" style="font-size: 2.5rem; color: var(--accent-color); margin-bottom: 15px; display: inline-block;"></i>
+                <h3 style="font-family: 'Outfit', sans-serif;">Aduan & Maklum Balas</h3>
+                <p class="section-desc mt-1">Bantu kami tingkatkan kualiti laman web ini.</p>
+            </div>
+            <div class="modal-body mt-4">
+                <form id="feedback-form">
+                    <div class="input-group mb-3">
+                        <label for="feedback-name">Nama <span class="text-muted">(Pilihan)</span></label>
+                        <input type="text" id="feedback-name" placeholder="Cth: Ahmad">
+                    </div>
+                    <div class="input-group mb-3">
+                        <label for="feedback-contact">Emel / No Tel <span class="text-muted">(Pilihan)</span></label>
+                        <input type="text" id="feedback-contact" placeholder="Cth: ahmad@gmail.com">
+                    </div>
+                    <div class="input-group mb-3">
+                        <label for="feedback-category">Kategori Utama</label>
+                        <select id="feedback-category" class="custom-select" required>
+                            <option value="Aduan Sistem (Bugs)">Aduan Sistem (Bugs)</option>
+                            <option value="Cadangan Penambahbaikan">Cadangan Penambahbaikan</option>
+                            <option value="Soalan Umum">Soalan Umum</option>
+                            <option value="Lain-lain">Lain-lain</option>
+                        </select>
+                    </div>
+                    <div class="input-group mb-4">
+                        <label for="feedback-message">Mesej Anda <span style="color:red">*</span></label>
+                        <textarea id="feedback-message" rows="4" placeholder="Taipkan aduan atau mesej anda secara terperinci..." required></textarea>
+                    </div>
+                    <button type="submit" id="submit-feedback-btn" class="btn primary-btn full-width"><i class="ri-send-plane-fill"></i> Hantar Maklum Balas</button>
+                </form>
+                <div id="feedback-status" class="mt-3 text-center hidden" style="font-size: 0.9rem; padding: 10px; border-radius: 8px;"></div>
+            </div>
+        </div>
+    </div>
 
     <script src="app-no-api.js"></script>
 </body>
