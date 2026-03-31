@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VizuAIl — Sistem Penjana Gambar Produk Premium AI #1 Malaysia</title>
+    <meta name="description" content="Jana gambar produk bertaraf studio dalam 2 minit. 13 sudut visual, sistem prompt 5T, poster composer. Tanpa photographer, tanpa Photoshop.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-glass: rgba(255,255,255,0.04);
+            --accent: #00d4aa;
+            --accent2: #7c3aed;
+            --gold: #f6c343;
+            --text: #e8e8ef;
+            --text-muted: #8888a0;
+            --gradient-hero: linear-gradient(135deg, #00d4aa 0%, #7c3aed 50%, #f6c343 100%);
+            --gradient-btn: linear-gradient(135deg, #00d4aa, #7c3aed);
+            --radius: 16px;
+        }
+        html { scroll-behavior: smooth; }
+        body { margin: 0; padding: 0; }
+        .vizuail-wrapper { font-family: 'Inter', sans-serif; background-color: var(--bg-dark) !important; color: var(--text) !important; overflow-x: hidden; line-height: 1.7; width: 100%; min-height: 100vh; position: relative; }
+
+        /* Utility */
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        .text-center { text-align: center; }
+        .text-accent { color: var(--accent); }
+        .text-gold { color: var(--gold); }
+        .text-muted { color: var(--text-muted); }
+        .mt-1 { margin-top: 8px; } .mt-2 { margin-top: 16px; } .mt-3 { margin-top: 24px; } .mt-4 { margin-top: 40px; } .mt-5 { margin-top: 64px; }
+        .mb-1 { margin-bottom: 8px; } .mb-2 { margin-bottom: 16px; } .mb-3 { margin-bottom: 24px; }
+
+        /* Navbar */
+        .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 16px 24px; background: rgba(10,10,15,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; }
+        .nav-logo { font-family: 'Outfit', sans-serif; font-size: 1.5rem; font-weight: 800; }
+        .nav-logo .ai { background: var(--gradient-hero); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-cta { background: var(--gradient-btn); color: #fff; border: none; padding: 10px 24px; border-radius: 50px; font-weight: 600; cursor: pointer; font-size: 0.9rem; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
+        .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,212,170,0.3); }
+
+        /* Hero */
+        .hero { padding: 140px 0 80px; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -200px; left: 50%; transform: translateX(-50%); width: 800px; height: 800px; background: radial-gradient(circle, rgba(0,212,170,0.08) 0%, rgba(124,58,237,0.05) 40%, transparent 70%); pointer-events: none; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(0,212,170,0.1); border: 1px solid rgba(0,212,170,0.2); padding: 8px 20px; border-radius: 50px; font-size: 0.85rem; color: var(--accent); font-weight: 600; margin-bottom: 24px; animation: pulse-glow 2s infinite; }
+        @keyframes pulse-glow { 0%,100% { box-shadow: 0 0 20px rgba(0,212,170,0.1); } 50% { box-shadow: 0 0 40px rgba(0,212,170,0.25); } }
+        .hero h1 { font-family: 'Outfit', sans-serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; line-height: 1.15; margin-bottom: 20px; }
+        .hero h1 .gradient { background: var(--gradient-hero); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero .subtitle { font-size: clamp(1rem, 2.5vw, 1.25rem); color: var(--text-muted); max-width: 700px; margin: 0 auto 32px; }
+        .hero-img { width: 100%; max-width: 900px; border-radius: var(--radius); margin: 40px auto 0; display: block; box-shadow: 0 30px 80px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.06); }
+        .hero-stats { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; margin-top: 48px; }
+        .stat { text-align: center; }
+        .stat-num { font-family: 'Outfit', sans-serif; font-size: 2.2rem; font-weight: 800; background: var(--gradient-hero); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .stat-label { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+
+        /* CTA Button */
+        .cta-btn { display: inline-flex; align-items: center; gap: 10px; background: var(--gradient-btn); color: #fff; border: none; padding: 18px 40px; border-radius: 50px; font-size: 1.1rem; font-weight: 700; cursor: pointer; text-decoration: none; transition: all 0.3s; box-shadow: 0 8px 30px rgba(0,212,170,0.2); }
+        .cta-btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 16px 50px rgba(0,212,170,0.35); }
+        .cta-btn i { font-size: 1.3rem; }
+
+        /* Section */
+        section { padding: 80px 0; }
+        .section-label { font-size: 0.8rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+        .section-title { font-family: 'Outfit', sans-serif; font-size: clamp(1.6rem, 4vw, 2.5rem); font-weight: 800; margin-bottom: 16px; }
+        .section-desc { color: var(--text-muted); max-width: 650px; margin: 0 auto 48px; font-size: 1.05rem; }
+
+        /* Pain Points */
+        .pain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 40px; }
+        .pain-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 32px; transition: all 0.3s; position: relative; overflow: hidden; }
+        .pain-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #ef4444, #f97316); }
+        .pain-card:hover { transform: translateY(-4px); border-color: rgba(239,68,68,0.2); }
+        .pain-card .emoji { font-size: 2rem; margin-bottom: 12px; display: block; }
+        .pain-card h3 { font-family: 'Outfit', sans-serif; font-size: 1.15rem; margin-bottom: 8px; }
+        .pain-card p { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* Solution */
+        .solution-card { background: var(--bg-card); border: 1px solid rgba(0,212,170,0.15); border-radius: var(--radius); padding: 32px; position: relative; overflow: hidden; }
+        .solution-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--gradient-btn); }
+        .solution-card .icon-circle { width: 56px; height: 56px; border-radius: 50%; background: rgba(0,212,170,0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+        .solution-card .icon-circle i { font-size: 1.5rem; color: var(--accent); }
+        .solution-card h3 { font-family: 'Outfit', sans-serif; font-size: 1.15rem; margin-bottom: 8px; }
+        .solution-card p { color: var(--text-muted); font-size: 0.9rem; }
+        .solution-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+
+        /* Showcase */
+        .showcase-img { width: 100%; border-radius: var(--radius); margin: 32px 0; box-shadow: 0 20px 60px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); }
+
+        /* Comparison Table */
+        .compare-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--bg-card); border-radius: var(--radius); overflow: hidden; margin-top: 40px; border: 1px solid rgba(255,255,255,0.06); }
+        .compare-table th, .compare-table td { padding: 16px 24px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .compare-table th { background: rgba(0,212,170,0.08); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.95rem; }
+        .compare-table th:first-child { width: 40%; }
+        .compare-table td { font-size: 0.9rem; }
+        .compare-table .check { color: var(--accent); font-size: 1.2rem; }
+        .compare-table .cross { color: #ef4444; font-size: 1.2rem; }
+        .compare-table .winner { background: rgba(0,212,170,0.03); }
+        .compare-table tr:last-child td { border-bottom: none; }
+
+        /* Steps */
+        .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-top: 40px; counter-reset: step; }
+        .step-item { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); padding: 32px 24px; text-align: center; position: relative; }
+        .step-item::before { counter-increment: step; content: counter(step); font-family: 'Outfit', sans-serif; font-size: 3rem; font-weight: 900; background: var(--gradient-hero); -webkit-background-clip: text; -webkit-text-fill-color: transparent; opacity: 0.3; position: absolute; top: 12px; right: 20px; }
+        .step-item i { font-size: 2rem; color: var(--accent); margin-bottom: 16px; display: block; }
+        .step-item h3 { font-family: 'Outfit', sans-serif; font-size: 1.05rem; margin-bottom: 8px; }
+        .step-item p { color: var(--text-muted); font-size: 0.85rem; }
+
+        /* Software mockup */
+        .mockup-section { background: linear-gradient(180deg, var(--bg-dark) 0%, #0f0f1a 100%); }
+        .mockup-img { width: 100%; max-width: 800px; display: block; margin: 0 auto; border-radius: var(--radius); }
+
+        /* Testimonial-style quote */
+        .quote-block { background: var(--bg-card); border-left: 4px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 32px; margin: 40px 0; font-size: 1.1rem; font-style: italic; color: var(--text-muted); }
+        .quote-block strong { color: var(--text); font-style: normal; }
+
+        /* Final CTA */
+        .final-cta { background: linear-gradient(135deg, rgba(0,212,170,0.08), rgba(124,58,237,0.08)); border: 1px solid rgba(0,212,170,0.15); border-radius: 24px; padding: 64px 40px; text-align: center; margin: 40px 0; }
+        .final-cta h2 { font-family: 'Outfit', sans-serif; font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; margin-bottom: 16px; }
+        .price-tag { font-family: 'Outfit', sans-serif; }
+        .price-tag .old { font-size: 1.3rem; text-decoration: line-through; color: var(--text-muted); }
+        .price-tag .new { font-size: 3rem; font-weight: 900; background: var(--gradient-hero); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-left: 16px; }
+        .price-tag .period { font-size: 0.9rem; color: var(--text-muted); }
+
+        /* Footer */
+        .footer { padding: 40px 0; border-top: 1px solid rgba(255,255,255,0.06); text-align: center; }
+        .footer-avatar { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent); margin-bottom: 12px; }
+        .footer a { color: var(--accent); text-decoration: none; }
+
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-stats { gap: 24px; }
+            .compare-table { font-size: 0.8rem; }
+            .compare-table th, .compare-table td { padding: 10px 12px; }
+            .final-cta { padding: 40px 20px; }
+            .pain-grid, .solution-grid, .steps { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="vizuail-wrapper">
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-logo">Vizu<span class="ai">AI</span>l</div>
+        <a href="#dapatkan" class="nav-cta"><i class="ri-rocket-line"></i> Dapatkan Sekarang</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container text-center">
+            <div class="hero-badge"><i class="ri-sparkling-fill"></i> Sistem AI #1 Untuk Peniaga Malaysia</div>
+            <h1>Gambar Produk <span class="gradient">Bertaraf Studio</span><br>Dalam Masa <span class="gradient">2 Minit</span></h1>
+            <p class="subtitle">Tak perlu photographer. Tak perlu Photoshop. Tak perlu modal besar. Hanya perlu VizuAIl — sistem AI yang jana prompt profesional & cipta poster jualan automatik.</p>
+            <a href="#dapatkan" class="cta-btn"><i class="ri-magic-line"></i> Dapatkan Akses Sekarang</a>
+            <img src="https://platform-bcl.bsb-cdn.com/media/2026/03/01KN181SSDC8R3BWKNEKXTSB22.png" alt="Before After VizuAIl" class="hero-img" loading="lazy">
+            <div class="hero-stats">
+                <div class="stat"><div class="stat-num">13</div><div class="stat-label">Sudut Visual Pro</div></div>
+                <div class="stat"><div class="stat-num">1X</div><div class="stat-label">Bayaran Sahaja</div></div>
+                <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Prompt Tanpa Had</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pain Points -->
+    <section>
+        <div class="container text-center">
+            <p class="section-label">Masalah Peniaga</p>
+            <h2 class="section-title">Kalau Pernah Rasa Macam Ni... <br>Anda Tak Keseorangan 😤</h2>
+            <div class="pain-grid">
+                <div class="pain-card"><span class="emoji">📸</span><h3>Gambar Produk Nampak "Murah"</h3><p>Ambil gambar guna phone, letak atas meja — pelanggan scroll terus tanpa pandang dua kali. Gambar tak buat orang rasa nak beli.</p></div>
+                <div class="pain-card"><span class="emoji">💸</span><h3>Kos Photoshoot Mencekik</h3><p>Nak hire photographer RM500-RM2,000 sekali shoot. Studio lagi RM300. Belum masuk editing. Untuk SME, ini bukan kos — ini beban!</p></div>
+                <div class="pain-card"><span class="emoji">😵</span><h3>Stress Buat Creative Ads</h3><p>Run ads tapi gambar sama je. Nak buat variasi 10-20 creative tapi siapa nak design? Habis masa, habis duit, hasil pun tak meyakinkan.</p></div>
+                <div class="pain-card"><span class="emoji">🤯</span><h3>Tak Pandai Photoshop & Design</h3><p>Tengok competitor gambar power macam iklan TV. Anda? Guna Canva template free yang semua orang pun guna. Brand kena tenggelam.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution -->
+    <section>
+        <div class="container text-center">
+            <p class="section-label">Penyelesaian</p>
+            <h2 class="section-title">Jadi, Kami Bina <span class="text-accent">VizuAIl</span> — <br>Supaya Anda Tak Perlu Semua Tu</h2>
+            <p class="section-desc">Satu sistem pintar yang jana prompt fotografi profesional dan cipta poster jualan secara automatik. Yang anda perlu? Hanya taip nama produk dan pilih gaya.</p>
+            <div class="solution-grid">
+                <div class="solution-card"><div class="icon-circle"><i class="ri-camera-3-line"></i></div><h3>Tanpa Hire Photographer</h3><p>Sistem jana prompt yang membuahkan gambar setaraf studio RM10,000+ — tanpa perlu keluar rumah.</p></div>
+                <div class="solution-card"><div class="icon-circle"><i class="ri-palette-line"></i></div><h3>Tanpa Skill Photoshop</h3><p>Pilih dari 13 sudut visual, klik satu butang — prompt siap. Salin dan tampal ke mana-mana AI (Gemini, ChatGPT, Midjourney).</p></div>
+                <div class="solution-card"><div class="icon-circle"><i class="ri-money-dollar-circle-line"></i></div><h3>Tanpa Langganan Bulanan</h3><p>Berjalan secara offline dan web app. Bayar sekali sahaja. Tiada yuran bulanan, tiada kos API tersembunyi. Sekali dapat, guna selamanya.</p></div>
+                <div class="solution-card"><div class="icon-circle"><i class="ri-poster-line"></i></div><h3>Auto Poster Jualan</h3><p>Sistem Poster Composer overlay tawaran seperti "Flash Sale", "Buy 1 Free 1" terus atas gambar AI anda. Ads-ready!</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 13 Angles Showcase -->
+    <section>
+        <div class="container text-center">
+            <p class="section-label">13 Sudut Visual</p>
+            <h2 class="section-title">Bukan 5 Prompt. Kami Beri <span class="text-accent">13 Mod Visual</span> Profesional.</h2>
+            <p class="section-desc">Setiap mod disertakan dengan parameter kamera, teknik pencahayaan, dan mood profesional. Ini bukan prompt biasa — ini formula fotografi komersial.</p>
+            <img src="https://platform-bcl.bsb-cdn.com/media/2026/03/01KN181T3BQ8AZAK53F8FA0VRB.png" alt="13 Visual Styles" class="showcase-img" loading="lazy">
+            <div class="steps">
+                <div class="step-item"><i class="ri-crosshair-line"></i><h3>Frontal & Dynamic</h3><p>Sharp, symmetrical, catalog-ready</p></div>
+                <div class="step-item"><i class="ri-space-ship-line"></i><h3>Floating & Artistic</h3><p>Levitating, zero-gravity, CGI-quality</p></div>
+                <div class="step-item"><i class="ri-drop-line"></i><h3>Action & Splash</h3><p>High-speed liquid, frozen motion</p></div>
+                <div class="step-item"><i class="ri-moon-clear-line"></i><h3>Dark & Luxurious</h3><p>Chiaroscuro, smoke, premium mood</p></div>
+                <div class="step-item"><i class="ri-flashlight-line"></i><h3>Cyberpunk & Neon</h3><p>Futuristic, Gen-Z, neon glow</p></div>
+                <div class="step-item"><i class="ri-leaf-line"></i><h3>Nature & Organic</h3><p>Golden hour, botanical, fresh</p></div>
+                <div class="step-item"><i class="ri-home-heart-line"></i><h3>Lifestyle & In-use</h3><p>Model Muslimah, editorial style</p></div>
+                <div class="step-item"><i class="ri-gift-line"></i><h3>+ 6 Lagi</h3><p>Macro, Minimalist, Flat Lay, Vintage, Festive, Scale</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases -->
+    <section>
+        <div class="container text-center">
+            <p class="section-label">Peluang Pemasaran</p>
+            <h2 class="section-title">Di Mana Nak Pakai Gambar Bertaraf Studio Ni?</h2>
+            <p class="section-desc">Jimat beribu ringgit. Ini adalah 6 platform 'wajib' untuk anda manfaatkan hasil gambar AI ini bagi meroketkan jenama dan jualan anda.</p>
+            <div class="steps">
+                <div class="step-item"><i class="ri-megaphone-fill"></i><h3>Facebook & TikTok Ads</h3><p>Tukar 'angle' iklan (creative ads) setiap minggu untuk mengelakkan prospek bosan — tingkatkan CTR.</p></div>
+                <div class="step-item"><i class="ri-store-2-fill"></i><h3>Shopee / TikTok Shop</h3><p>Gambar *thumbnail* produk yang premium membuatkan kedai anda kelihatan jauh lebih berjenama (trusted) dari pesaing.</p></div>
+                <div class="step-item"><i class="ri-layout-masonry-fill"></i><h3>Website & Landing Page</h3><p>Pelawat lebih mudah diyakinkan untuk menekan butang 'Beli' bila disajikan dengan kualiti resolusi tinggi.</p></div>
+                <div class="step-item"><i class="ri-whatsapp-fill"></i><h3>Hebahan WhatsApp Ejen</h3><p>Hasilkan 'Poster Promosi Kilat' dan pass kepada sistem ejen jualan atau *database* database VIP secara berterusan.</p></div>
+                <div class="step-item"><i class="ri-instagram-fill"></i><h3>Posting Media Sosial Harian</h3><p>Konsisten muat naik gambar estetik (lifestyle/organic) untuk naikkan kredibiliti jenama setiap hari.</p></div>
+                <div class="step-item"><i class="ri-printer-fill"></i><h3>Material Cetakan Fizikal</h3><p>Boleh digilap resolusinya (upscale) ke saiz mega untuk tujuan percetakan seperti *bunting*, *banner* promosi, atau brosur fizikal.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison -->
+    <section>
+        <div class="container text-center">
+            <p class="section-label">Perbandingan</p>
+            <h2 class="section-title">VizuAIl vs Prompt Biasa — <span class="text-gold">Nampak Beza?</span></h2>
+            <table class="compare-table">
+                <thead><tr><th>Ciri-ciri</th><th>Prompt Biasa (Pesaing)</th><th class="winner">VizuAIl ✨</th></tr></thead>
+                <tbody>
+                    <tr><td>Bilangan sudut visual</td><td>5 prompt tetap</td><td class="winner"><strong>13 mod dinamik</strong></td></tr>
+                    <tr><td>Sistem prompt</td><td>Copy-paste biasa</td><td class="winner"><strong>Sistem 5T berstruktur (Task, Thing, Technique, Tone, Template)</strong></td></tr>
+                    <tr><td>Parameter kamera</td><td><i class="ri-close-line cross"></i></td><td class="winner"><i class="ri-check-line check"></i> Lens, f-stop, shutter</td></tr>
+                    <tr><td>Poster jualan automatik</td><td><i class="ri-close-line cross"></i></td><td class="winner"><i class="ri-check-line check"></i> Poster Composer</td></tr>
+                    <tr><td>Tawaran jualan (Offer Engine)</td><td><i class="ri-close-line cross"></i></td><td class="winner"><i class="ri-check-line check"></i> 4 kategori, 14 jenis</td></tr>
+                    <tr><td>Software interaktif</td><td><i class="ri-close-line cross"></i> Hanya PDF/teks</td><td class="winner"><i class="ri-check-line check"></i> Full web app</td></tr>
+                    <tr><td>Kos API / langganan</td><td>Ada (kumpul data)</td><td class="winner"><strong>Bayar sekali, guna tanpa had</strong></td></tr>
+                    <tr><td>Negative prompt</td><td><i class="ri-close-line cross"></i></td><td class="winner"><i class="ri-check-line check"></i> Auto-generated</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section>
+        <div class="container text-center">
+            <p class="section-label">Cara Guna</p>
+            <h2 class="section-title">Secepat <span class="text-accent">2 Minit</span>. Seserius Bertaraf Studio.</h2>
+            <div class="steps">
+                <div class="step-item"><i class="ri-edit-line"></i><h3>Taip Produk Anda</h3><p>Masukkan penerangan ringkas produk — cth: "Botol kaca kuning berpenutup perak"</p></div>
+                <div class="step-item"><i class="ri-cursor-line"></i><h3>Pilih Sudut Visual</h3><p>Pilih dari 13 mod profesional — Dark & Luxurious, Action Splash, Cyberpunk dan lain-lain</p></div>
+                <div class="step-item"><i class="ri-magic-line"></i><h3>Klik Jana Prompt</h3><p>Sistem 5T menjana prompt penuh dengan parameter kamera, lighting & mood</p></div>
+                <div class="step-item"><i class="ri-image-line"></i><h3>Salin → Jana → Guna</h3><p>Tampal di Gemini / ChatGPT / Midjourney. Gambar premium siap untuk ads!</p></div>
+            </div>
+            <img src="https://platform-bcl.bsb-cdn.com/media/2026/03/01KN181SESE7CQ1415YFFMK0DX.png" alt="VizuAIl Software" class="mockup-img mt-4" loading="lazy">
+        </div>
+    </section>
+
+    <!-- Social Proof Quote -->
+    <section>
+        <div class="container">
+            <div class="quote-block">
+                "Dulu saya bayar <strong>RM800</strong> untuk satu sesi product photoshoot. Sekarang dengan VizuAIl, saya boleh hasilkan <strong>unlimited creative ads</strong> dalam masa beberapa minit sahaja. Kualiti? <strong>Sama level atau lebih baik.</strong>"
+                <br><br>— <strong>Coachbert</strong>, Puncak Alam, Selangor
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section id="dapatkan">
+        <div class="container">
+            <div class="final-cta">
+                <div class="hero-badge mb-2"><i class="ri-star-smile-fill"></i> Tawaran Super Eksklusif!</div>
+                <h2>Ready Nak Upgrade Gambar Produk<br>Jadi <span class="text-accent">Bertaraf Studio</span>?</h2>
+                <p class="text-muted mt-2 mb-3">13 sudut visual • Sistem prompt 5T • Poster Composer • Bayar sekali, guna banyak kali</p>
+                <div class="price-tag mb-3">
+                    <span class="old" style="margin-right: -10px;">RM199</span>
+                    <span class="new">RM49</span>
+                    <br><span class="period" style="font-size: 1.1rem; color: var(--accent); font-weight: 500;">Bayar sekali, akses penuh selamanya. Tiada caj langganan.</span>
+                </div>
+                <a href="index-noapi.html" class="cta-btn"><i class="ri-rocket-2-fill"></i> Dapatkan VizuAIl Sekarang →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" style="text-align: center !important; width: 100%; display: block; background-color: transparent !important;">
+        <div class="container" style="text-align: center !important;">
+            <img src="https://i.ibb.co/CKs7VZwJ/Logo-Cikgukb.png" alt="CikguKB" class="footer-avatar" style="margin: 0 auto 12px auto; display: block;">
+            <p style="text-align: center !important;">Dibina dengan ❤️ oleh <strong>CikguKB</strong></p>
+            <a href="https://cikgukb.my/" target="_blank" style="display: inline-block;">@CikguKB</a>
+            <p class="text-muted mt-2" style="font-size:0.8rem; text-align: center !important;">© 2026 VizuAIl Marketing Strategy. Hak cipta terpelihara.<br>KB Beyond Creative.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth reveal on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.pain-card, .solution-card, .step-item, .compare-table, .quote-block').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Navbar shadow on scroll
+        window.addEventListener('scroll', () => {
+            document.querySelector('.navbar').style.boxShadow = window.scrollY > 50 ? '0 4px 30px rgba(0,0,0,0.3)' : 'none';
+        });
+    </script>
+</div>
+</body>
+</html>
