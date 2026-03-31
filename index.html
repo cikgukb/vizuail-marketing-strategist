@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Visual Strategy | Studio-Grade Simulator</title>
+    <title>AI Visual Strategy | Versi Tanpa API</title>
     
     <!-- Premium Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,32 +17,10 @@
 </head>
 <body>
     
-    <!-- Settings Modal -->
-    <div id="settings-modal" class="modal hidden">
-        <div class="modal-content glass">
-            <div class="modal-header">
-                <h3>Tetapan Enjin AI</h3>
-                <button id="close-settings" class="icon-btn"><i class="ri-close-line"></i></button>
-            </div>
-            <div class="modal-body">
-                <p class="description">Masukkan API Key Gemini anda untuk mengaktifkan "Vision Analysis" bagi memastikan identiti produk dikunci dengan tepat dalam prompt.</p>
-                <div class="input-group">
-                    <label for="gemini-key">Gemini API Key</label>
-                    <input type="password" id="gemini-key" placeholder="AIzaSy...">
-                    <small>Dapatkan kekunci percuma di Google AI Studio.</small>
-                </div>
-                <button id="save-settings" class="btn primary-btn mt-4">Simpan Kekunci</button>
-            </div>
-        </div>
-    </div>
-
     <header class="navbar frosted">
         <div class="logo">
             <div class="cube"><i class="ri-box-3-fill"></i></div>
             <span>Vizu<span class="highlight">AI</span>l</span>
-        </div>
-        <div class="nav-actions">
-            <button id="open-settings" class="btn outline-btn"><i class="ri-settings-4-line"></i> Tetapan API</button>
         </div>
     </header>
 
@@ -50,26 +28,33 @@
         <!-- Hero Section -->
         <section class="hero text-center pt-5 pb-4">
             <h1 class="main-title mb-2">Pakar Strategi Pemasaran <span class="highlight-text">Visual AI</span></h1>
-            <p class="subtitle mb-4">Tukar gambar produk biasa menjadi visual gred studio komersial beserta tawaran automatik.</p>
+            <p class="subtitle mb-4">Menjana Rantaian Prompt Profesional dan Pembuat Poster.</p>
         </section>
 
         <div class="grid-layout">
             <!-- Left Panel: Inputs -->
             <div class="panel glass left-panel">
                 
-                <!-- STEP 1: Upload Product -->
+                <!-- STEP 1: Product Input (Manual) -->
                 <div class="step-card">
                     <div class="step-header">
                         <span class="step-num">1</span>
-                        <h2>Gambar Produk Asal</h2>
+                        <h2>Identiti Produk</h2>
                     </div>
-                    <div class="upload-area" id="upload-area">
+                    
+                    <div class="input-group mb-3">
+                        <label for="product-desc">Penerangan Produk (Sifat Fizikal)</label>
+                        <input type="text" id="product-desc" placeholder="Cth: Botol kaca kuning berpenutup perak, produk kosmetik mewah...">
+                        <small class="text-muted">Gantikan tugas fungsi 'AI Vision' dengan menaip ciri produk anda di sini.</small>
+                    </div>
+
+                    <p><strong><small class="text-muted">Rujukan Poster (Pilihan)</small></strong></p>
+                    <div class="upload-area mt-1" id="upload-area">
                         <input type="file" id="product-input" accept="image/*" class="hidden-input">
                         
                         <div class="upload-content" id="upload-prompt">
                             <i class="ri-upload-cloud-2-line large-icon"></i>
-                            <p>Tarik & Lepas gambar atau <strong>Klik untuk semak imbas</strong></p>
-                            <small class="text-muted">Pastikan gambar jelas untuk 'Visual Lock' AI.</small>
+                            <p>Muat Naik Rujukan</p>
                         </div>
                         
                         <div class="image-preview" id="preview-container" style="display: none;">
@@ -83,9 +68,8 @@
                 <div class="step-card mt-4">
                     <div class="step-header">
                         <span class="step-num">2</span>
-                        <h2>Sudut Visual & Tema (13 Mod)</h2>
+                        <h2>Sudut Visual &amp; Tema (13 Mod)</h2>
                     </div>
-                    <!-- Cards injected by JS -->
                     <div class="grid-cards" id="angles-grid"></div>
                 </div>
 
@@ -108,8 +92,8 @@
                         <div class="input-group mb-3">
                             <label for="offer-category">Kategori Promosi</label>
                             <select id="offer-category" class="custom-select">
-                                <option value="urgency">Urgency & Scarcity (Terhad)</option>
-                                <option value="volume">Volume & Bundling (Beli Banyak)</option>
+                                <option value="urgency">Urgency &amp; Scarcity (Terhad)</option>
+                                <option value="volume">Volume &amp; Bundling (Beli Banyak)</option>
                                 <option value="value">Value Addition (Nilai Tambah)</option>
                                 <option value="friction">Friction Reduction (Bantu Pembelian)</option>
                             </select>
@@ -118,7 +102,6 @@
                         <div class="input-group" id="offer-list-container">
                             <label for="offer-type">Jenis Tawaran</label>
                             <select id="offer-type" class="custom-select">
-                                <!-- Populated by JS -->
                             </select>
                         </div>
                     </div>
@@ -138,18 +121,13 @@
                 <div class="result-placeholder" id="empty-state">
                     <div class="glow-orb"></div>
                     <i class="ri-sparkling-fill huge-icon"></i>
-                    <h3>Ruang Strategi AI</h3>
+                    <h3>Ruang Strategi Offline</h3>
                     <p>Lengkapkan langkah di sebelah kiri untuk menjana formula prompt dan studio poster anda.</p>
                 </div>
 
                 <!-- Results State -->
                 <div id="result-state" class="hidden">
                     
-                    <div class="status-card analyzer-status mb-4 hidden" id="ai-loading">
-                        <div class="spinner"></div>
-                        <span>Menganalisis profil produk dengan Gemini Vision...</span>
-                    </div>
-
                     <div class="result-card" id="prompt-result">
                         <div class="card-header flex-between">
                             <h3 style="font-family: 'Outfit', sans-serif;"><i class="ri-terminal-window-fill highlight-text"></i> Prompt Pemasaran Pintar (5T)</h3>
@@ -157,11 +135,11 @@
                         </div>
                         <div class="card-body">
                             <textarea id="output-prompt" class="code-textarea" rows="18" readonly></textarea>
-                            <p class="helper-text mt-2"><i class="ri-information-line"></i> Salin dan tampal di Midjourney, DALL-E 3 atau Adobe Firefly. Sistem telah mengunci rupa produk asal anda.</p>
+                            <p class="helper-text mt-2"><i class="ri-information-line"></i> Salin dan tampal di Midjourney, DALL-E 3 atau Adobe Firefly.</p>
                         </div>
                     </div>
 
-                    <!-- Poster Composer (Appears only if Offer is ON) -->
+                    <!-- Poster Composer -->
                     <div class="result-card mt-4 hidden" id="poster-composer">
                         <div class="card-header">
                             <h3 style="font-family: 'Outfit', sans-serif;"><i class="ri-brush-3-fill highlight-text"></i> Editor Poster Overlay</h3>
@@ -172,8 +150,6 @@
                                 <input type="file" id="ai-image-input" accept="image/*" class="hidden-input">
                                 <span><i class="ri-image-add-line"></i> Masukkan Gambar AI Siap (.png / .jpg)</span>
                             </div>
-                            
-                            <!-- Drawing Canvas -->
                             <div class="canvas-container mt-3 hidden" id="canvas-wrapper">
                                 <canvas id="poster-canvas"></canvas>
                                 <button id="download-btn" class="btn success-btn full-width mt-3"><i class="ri-download-cloud-2-line"></i> Muat Turun Poster Jualan</button>
@@ -183,27 +159,22 @@
 
                     <!-- Tips Section -->
                     <div class="tips-container mt-4">
-                        <!-- Tip 1: Upscale -->
                         <div class="tip-card">
                             <div class="tip-header">
                                 <i class="ri-lightbulb-flash-fill"></i> Tips: Tingkatkan Resolusi Gambar
                             </div>
                             <div class="tip-body">
-                                Jika ingin memastikan gambar anda senang dicam oleh AI, ini adalah laman web yang mana anda boleh
-                                increasekan resolusi gambar asal anda. Kemudian, barulah anda letakkan ke dalam mana-mana LLM untuk
-                                dijanakan bersama dengan prompt yang sudah dijana supaya menjadikan hasil anda itu lebih sharp lagi.
+                                Jika ingin memastikan gambar anda senang dicam oleh AI, increasekan resolusi gambar asal anda dahulu.
                                 <br><br>
                                 <a href="https://www.iloveimg.com/upscale-image" target="_blank" class="tip-link">https://www.iloveimg.com/upscale-image</a>
                             </div>
                         </div>
-
-                        <!-- Tip 2: Watermark Remover -->
                         <div class="tip-card">
                             <div class="tip-header">
                                 <i class="ri-lightbulb-flash-fill"></i> Tips: Gemini Watermark Remover
                             </div>
                             <div class="tip-body">
-                                Jika anda ingin membuang watermark, berikut adalah alat-alat yang boleh anda gunakan di bawah:
+                                Alat untuk membuang watermark:
                                 <ol>
                                     <li><a href="https://gemwatermarkremover.com" target="_blank" class="tip-link">gemwatermarkremover.com</a></li>
                                     <li><a href="https://sora2dl.com/gemini-removal" target="_blank" class="tip-link">sora2dl.com/gemini-removal</a></li>
@@ -230,7 +201,7 @@
             <p class="footer-subtext">Isikan borang di bawah untuk membantu kami menjadi lebih baik:</p>
             
             <a href="#" id="open-feedback-btn" class="btn primary-btn mt-3" style="display: inline-flex; max-width: 300px; margin: 16px auto; align-items: center; justify-content: center; background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: 1px solid rgba(16, 185, 129, 0.3);">
-                <i class="ri-feedback-line" style="margin-right: 8px;"></i> Borang Aduan & Cadangan
+                <i class="ri-feedback-line" style="margin-right: 8px;"></i> Borang Aduan &amp; Cadangan
             </a>
         </div>
     </footer>
@@ -240,9 +211,9 @@
         <div class="modal-content glass">
             <button id="close-feedback-btn" class="icon-btn close-modal-btn"><i class="ri-close-line"></i></button>
             <div class="modal-header text-center">
-                <i class="ri-mail-send-fill" style="font-size: 2.5rem; color: var(--accent-color); margin-bottom: 15px; display: inline-block;"></i>
-                <h3 style="font-family: 'Outfit', sans-serif;">Aduan & Maklum Balas</h3>
-                <p class="section-desc mt-1">Bantu kami tingkatkan kualiti laman web ini.</p>
+                <i class="ri-mail-send-fill" style="font-size: 2.5rem; color: var(--accent-1); margin-bottom: 15px; display: inline-block;"></i>
+                <h3 style="font-family: 'Outfit', sans-serif;">Aduan &amp; Maklum Balas</h3>
+                <p class="section-desc mt-1">Bantu kami tingkatkan kualiti sistem ini.</p>
             </div>
             <div class="modal-body mt-4">
                 <form id="feedback-form">
@@ -274,6 +245,6 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app-no-api.js"></script>
 </body>
 </html>
