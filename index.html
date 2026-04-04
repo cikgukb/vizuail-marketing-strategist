@@ -35,7 +35,14 @@
             <!-- Left Panel: Inputs -->
             <div class="panel glass left-panel">
                 
-                <!-- STEP 1: Product Input (Manual) -->
+                <!-- Mode Switcher -->
+                <div class="mode-switcher mb-4">
+                    <button id="mode-product" class="mode-btn active"><i class="ri-shopping-cart-2-fill"></i> Pemasaran Produk</button>
+                    <button id="mode-service" class="mode-btn"><i class="ri-briefcase-4-fill"></i> Promosi Servis</button>
+                </div>
+
+                <div id="product-mode-content">
+                <!-- STEP 1: Upload Product -->
                 <div class="step-card">
                     <div class="step-header">
                         <span class="step-num">1</span>
@@ -113,6 +120,56 @@
                         <i class="ri-magic-line"></i> Jana Rantaian Strategi
                     </button>
                 </div>
+                </div> <!-- END product-mode-content -->
+
+                <!-- SERVICE MODE CONTENT -->
+                <div id="service-mode-content" class="hidden">
+                    <!-- STEP 1: Saiz Perniagaan -->
+                    <div class="step-card">
+                        <div class="step-header">
+                            <span class="step-num">1</span>
+                            <h2>Saiz Perniagaan</h2>
+                        </div>
+                        <div class="pills-container" id="company-size-selector">
+                            <button class="pill-btn" data-value="Mikro">Mikro</button>
+                            <button class="pill-btn" data-value="Kecil">Kecil</button>
+                            <button class="pill-btn" data-value="Sederhana">Sederhana</button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2: Industri / Perniagaan -->
+                    <div class="step-card mt-4">
+                        <div class="step-header">
+                            <span class="step-num">2</span>
+                            <h2>Apakah Perniagaan Anda?</h2>
+                        </div>
+                        <div class="input-group">
+                            <select id="service-industry" class="custom-select" disabled>
+                                <option value="">Sila pilih Saiz Perniagaan dahulu</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: Jenis Promosi -->
+                    <div class="step-card mt-4">
+                        <div class="step-header">
+                            <span class="step-num">3</span>
+                            <h2>Jenis Promosi</h2>
+                        </div>
+                        <div class="input-group">
+                            <select id="service-promotion" class="custom-select" disabled>
+                                <option value="">Sila pilih Perniagaan dahulu</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Generate Action for Service -->
+                    <div class="action-bar mt-5">
+                        <button id="generate-service-btn" class="btn primary-btn full-width mega-btn" disabled>
+                            <i class="ri-magic-line"></i> Jana Prompt Spesifik
+                        </button>
+                    </div>
+                </div> <!-- END service-mode-content -->
 
             </div>
 
@@ -245,6 +302,11 @@
         </div>
     </div>
 
+<<<<<<< HEAD
     <script src="app-no-api.js"></script>
+=======
+    <script src="service-data.js"></script>
+    <script src="app.js"></script>
+>>>>>>> 63bb9af (feat: Add Service Prompts generator UI and data converter)
 </body>
 </html>

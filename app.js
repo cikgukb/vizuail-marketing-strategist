@@ -155,6 +155,21 @@ const feedbackForm = document.getElementById('feedback-form');
 const feedbackStatus = document.getElementById('feedback-status');
 const submitFeedbackBtn = document.getElementById('submit-feedback-btn');
 
+// --- Service Mode DOM Elements ---
+const modeProductBtn = document.getElementById('mode-product');
+const modeServiceBtn = document.getElementById('mode-service');
+const productModeContent = document.getElementById('product-mode-content');
+const serviceModeContent = document.getElementById('service-mode-content');
+
+const companySizeButtons = document.querySelectorAll('#company-size-selector .pill-btn');
+const serviceIndustrySelect = document.getElementById('service-industry');
+const servicePromotionSelect = document.getElementById('service-promotion');
+const generateServiceBtn = document.getElementById('generate-service-btn');
+
+let selectedCompanySize = '';
+let selectedIndustry = '';
+let selectedPromotion = '';
+
 // --- Google Apps Script Webhook URL ---
 // TENTATIF: Masukkan URL Web App daripada Google Apps Script selepas Deploy
 const FEEDBACK_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxAowp4E4I5bHdvwrkjxWulgxWhC7VxsCsFe4XfsE3nXZtL0g2xbLiT7CaIs-mM9fjC/exec';
@@ -173,6 +188,7 @@ function init() {
     }
     
     attachEventListeners();
+    attachServiceEventListeners();
 }
 
 // --- Render Functions ---
@@ -325,6 +341,124 @@ function checkReadyState() {
     }
 }
 
+// --- Service Mode Logic ---
+function attachServiceEventListeners() {
+    // Mode Switching
+    modeProductBtn.addEventListener('click', () => {
+        modeServiceBtn.classList.remove('active');
+        modeProductBtn.classList.add('active');
+        serviceModeContent.classList.add('hidden');
+        productModeContent.classList.remove('hidden');
+    });
+
+    modeServiceBtn.addEventListener('click', () => {
+        modeProductBtn.classList.remove('active');
+        modeServiceBtn.classList.add('active');
+        productModeContent.classList.add('hidden');
+        serviceModeContent.classList.remove('hidden');
+    });
+
+    // Saiz Perniagaan (Pills)
+    companySizeButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            companySizeButtons.forEach(b => b.classList.remove('selected'));
+            e.target.classList.add('selected');
+            selectedCompanySize = e.target.dataset.value;
+            
+            // Populate Industry Dropdown
+            const filteredIndustries = [...new Set(serviceDatabase
+                .filter(item => item.saizSyarikat.toLowerCase() === selectedCompanySize.toLowerCase())
+                .map(item => item.perniagaan))].sort();
+            
+            serviceIndustrySelect.innerHTML = '<option value="">-- Sila Pilih Industri --</option>';
+            filteredIndustries.forEach(ind => {
+                const opt = document.createElement('option');
+                opt.value = ind;
+                opt.textContent = ind;
+                serviceIndustrySelect.appendChild(opt);
+            });
+            serviceIndustrySelect.disabled = false;
+            
+            // Reset down level
+            servicePromotionSelect.innerHTML = '<option value="">Sila pilih Perniagaan dahulu</option>';
+            servicePromotionSelect.disabled = true;
+            selectedIndustry = '';
+            selectedPromotion = '';
+            checkServiceReadyState();
+        });
+    });
+
+    // Sub-category (Jenis Promosi) based on Industry
+    serviceIndustrySelect.addEventListener('change', (e) => {
+        selectedIndustry = e.target.value;
+        if(selectedIndustry) {
+            const filteredPromotions = [...new Set(serviceDatabase
+                .filter(item => item.saizSyarikat.toLowerCase() === selectedCompanySize.toLowerCase() && item.perniagaan === selectedIndustry)
+                .map(item => item.jenisPromosi))].sort();
+
+            servicePromotionSelect.innerHTML = '<option value="">-- Pilih Jenis Promosi --</option>';
+            filteredPromotions.forEach(promo => {
+                const opt = document.createElement('option');
+                opt.value = promo;
+                opt.textContent = promo;
+                servicePromotionSelect.appendChild(opt);
+            });
+            servicePromotionSelect.disabled = false;
+        } else {
+            servicePromotionSelect.innerHTML = '<option value="">Sila pilih Perniagaan dahulu</option>';
+            servicePromotionSelect.disabled = true;
+        }
+        selectedPromotion = '';
+        checkServiceReadyState();
+    });
+
+    servicePromotionSelect.addEventListener('change', (e) => {
+        selectedPromotion = e.target.value;
+        checkServiceReadyState();
+    });
+
+    // Generate Action
+    generateServiceBtn.addEventListener('click', generateServiceStrategy);
+}
+
+function checkServiceReadyState() {
+    if(selectedCompanySize && selectedIndustry && selectedPromotion) {
+        generateServiceBtn.disabled = false;
+        generateServiceBtn.classList.add('pulse');
+    } else {
+        generateServiceBtn.disabled = true;
+        generateServiceBtn.classList.remove('pulse');
+    }
+}
+
+function generateServiceStrategy() {
+    // Find prompt from database
+    const record = serviceDatabase.find(item => 
+        item.saizSyarikat.toLowerCase() === selectedCompanySize.toLowerCase() && 
+        item.perniagaan === selectedIndustry && 
+        item.jenisPromosi === selectedPromotion
+    );
+
+    if(!record) {
+        alert("Maaf, tiada prompt dijumpai untuk kombinasi ini.");
+        return;
+    }
+
+    // Output UI Updates
+    emptyState.classList.add('hidden');
+    resultState.classList.remove('hidden');
+    loadingState.classList.add('hidden'); // Instant, no loading required
+    promptResult.classList.remove('hidden');
+    posterComposer.classList.add('hidden'); // Service mode just outputs text
+
+    outputPrompt.value = record.prompt.replace(/^["“”]+|["“”]+$/g, ''); // strip outer quotes if any
+    
+    // Auto-scroll to results on small screens
+    if (window.innerWidth <= 992) {
+        resultState.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
 // --- Integration API ---
 async function analyzeImageWithGemini() {
     if(!apiKey) throw new Error("API Key hilang.");
@@ -450,61 +584,6 @@ async function generateStrategy() {
     }
 }
 
-async function handleFeedbackSubmit(e) {
-    e.preventDefault();
-    if (!FEEDBACK_WEBHOOK_URL) {
-        alert("Sila kemas kini FEEDBACK_WEBHOOK_URL di dalam fail javascript terlebih dahulu.");
-        return;
-    }
-    
-    // UI Update
-    submitFeedbackBtn.disabled = true;
-    submitFeedbackBtn.innerHTML = '<div class="spinner border-sm mr-2" style="display:inline-block; border-color:white; border-top-color:transparent; width:15px; height:15px"></div> Menghantar...';
-    feedbackStatus.classList.add('hidden');
-    
-    const formData = {
-        name: document.getElementById('feedback-name').value.trim(),
-        contact: document.getElementById('feedback-contact').value.trim(),
-        category: document.getElementById('feedback-category').value,
-        message: document.getElementById('feedback-message').value.trim()
-    };
-    
-    try {
-        const response = await fetch(FEEDBACK_WEBHOOK_URL, {
-            method: 'POST',
-            body: JSON.stringify(formData),
-            headers: {
-                'Content-Type': 'text/plain;charset=utf-8' // Simple Request to bypass CORS preflight
-            }
-        });
-        
-        const result = await response.json();
-        if (result.status === 'success') {
-            feedbackStatus.textContent = "Aduan anda berjaya dihantar. Terima kasih!";
-            feedbackStatus.style.background = "rgba(16, 185, 129, 0.2)";
-            feedbackStatus.style.color = "var(--success)";
-            feedbackForm.reset();
-        } else {
-            throw new Error(result.message || 'Ralat pelayan.');
-        }
-    } catch (error) {
-        feedbackStatus.textContent = "Gagal menghantar aduan: " + error.message;
-        feedbackStatus.style.background = "rgba(239, 68, 68, 0.2)";
-        feedbackStatus.style.color = "var(--danger)";
-    } finally {
-        submitFeedbackBtn.disabled = false;
-        submitFeedbackBtn.innerHTML = '<i class="ri-send-plane-fill"></i> Hantar Maklum Balas';
-        feedbackStatus.classList.remove('hidden');
-        
-        // Auto hide modal after 3s on success
-        if (feedbackStatus.style.color === "var(--success)") {
-            setTimeout(() => {
-                feedbackModal.classList.add('hidden');
-                feedbackStatus.classList.add('hidden');
-            }, 3000);
-        }
-    }
-}
 
 // --- Canvas Composer ---
 function drawPosterCanvas(file) {
@@ -641,19 +720,20 @@ function initFeedbackModal() {
             const payload = JSON.stringify({ name, contact, category, message });
 
             try {
-                const response = await fetch(FEEDBACK_WEBHOOK_URL, {
+                // Gunakan mode: 'no-cors' untuk bypass isu sekatan Origin di pelayan GitHub Pages
+                // apabila menghantar ke Google Apps Script. 
+                await fetch(FEEDBACK_WEBHOOK_URL, {
                     method: 'POST',
+                    mode: 'no-cors',
                     headers: { 'Content-Type': 'text/plain' },
                     body: payload
                 });
-                const result = await response.text();
-                if (result.includes('success') || response.ok) {
-                    showFeedbackStatus('✅ Terima kasih! Maklum balas anda telah dihantar.', 'success');
-                    form.reset();
-                    setTimeout(() => { modal.classList.add('hidden'); statusDiv.classList.add('hidden'); }, 3000);
-                } else {
-                    showFeedbackStatus('❌ Ralat: Maklum balas gagal dihantar. Cuba lagi.', 'error');
-                }
+                
+                // Dengan mode no-cors, kita tak dapat baca response. Jadi asalkan fetch tidak error, kita anggap ia berjaya dihantar.
+                showFeedbackStatus('✅ Terima kasih! Maklum balas anda telah dihantar.', 'success');
+                form.reset();
+                setTimeout(() => { modal.classList.add('hidden'); statusDiv.classList.add('hidden'); }, 3000);
+                
             } catch (err) {
                 showFeedbackStatus('❌ Gagal berhubung. Sila periksa sambungan internet anda.', 'error');
             } finally {
